@@ -1,86 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Lector de noticias minimalista - Política, Economía, Ciencia, Tecnología, Cultura y Cine">
-    <meta name="theme-color" content="#1a1a2e">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="News Minimal">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-192.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
-    
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
-    
-    <title>📰 News Minimal</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Lector minimalista de noticias: Política, Economía, Ciencia, Tecnología, Cultura, Cine." />
+  <meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  
+  <!-- PWA: Manifest -->
+  <link rel="manifest" href="/news-minimal-pwa/manifest.json" />
+  
+  <!-- Favicon: SVG + PNG fallbacks para barra de direcciones -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2300d1b2'/%3E%3Ctext x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-family='system-ui'%3Eℹ%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/news-minimal-pwa/icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/news-minimal-pwa/icons/icon-512.png" />
+  <link rel="apple-touch-icon" href="/news-minimal-pwa/icons/icon-192.png" />
+  
+  <!-- Preconnect a fuentes y posibles APIs -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  
+  <title>News Minimal</title>
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/news-minimal-pwa/styles.css" />
 </head>
 <body>
-    <!-- Header -->
-    <header class="header" role="banner">
-        <div class="header-content">
-            <h1 class="logo">📰 News Minimal</h1>
-            <button id="installBtn" class="install-btn" aria-label="Instalar aplicación" hidden>
-                <span>📥</span> Instalar
-            </button>
-        </div>
-    </header>
-
-    <!-- Navigation - Categories -->
-    <nav class="nav-categories" role="navigation" aria-label="Categorías de noticias">
-        <button class="cat-btn active" data-category="all" aria-current="page">Todas</button>
-        <button class="cat-btn" data-category="politics">Política</button>
-        <button class="cat-btn" data-category="economy">Economía</button>
-        <button class="cat-btn" data-category="science">Ciencia</button>
-        <button class="cat-btn" data-category="technology">Tecnología</button>
-        <button class="cat-btn" data-category="culture">Cultura</button>
-        <button class="cat-btn" data-category="cinema">Cine</button>
+  <a href="#contenido-principal" class="skip-link">Saltar al contenido</a>
+  
+  <!-- Header minimalista -->
+  <header role="banner">
+    <h1 id="app-title">News Minimal</h1>
+    <nav role="navigation" aria-label="Categorías de noticias">
+      <ul class="category-tabs" role="tablist">
+        <li><button role="tab" aria-selected="true" data-category="all">Todas</button></li>
+        <li><button role="tab" data-category="politica">Política</button></li>
+        <li><button role="tab" data-category="economia">Economía</button></li>
+        <li><button role="tab" data-category="ciencia">Ciencia</button></li>
+        <li><button role="tab" data-category="tecnologia">Tecnología</button></li>
+        <li><button role="tab" data-category="cultura">Cultura</button></li>
+        <li><button role="tab" data-category="cine">Cine</button></li>
+      </ul>
     </nav>
+  </header>
 
-    <!-- Main Content -->
-    <main class="main-content" role="main">
-        <!-- Loading State -->
-        <div id="loading" class="loading" aria-live="polite">
-            <div class="spinner"></div>
-            <p>Cargando noticias...</p>
-        </div>
+  <!-- Selector de fuentes (accesible) -->
+  <section class="sources-filter" aria-label="Filtrar por fuente">
+    <label for="source-select">Fuente:</label>
+    <select id="source-select" aria-describedby="source-help">
+      <option value="all">Todas las fuentes</option>
+      <option value="bbc">BBC Mundo</option>
+      <option value="elpais">El País</option>
+      <option value="sciencedaily">Science Daily</option>
+      <option value="pagina12">Página/12</option>
+      <option value="clarin">Clarín</option>
+      <option value="nytimes">The New York Times</option>
+      <option value="wired">Wired</option>
+    </select>
+    <small id="source-help">Seleccioná una fuente para filtrar las noticias</small>
+  </section>
 
-        <!-- News Grid -->
-        <div id="newsGrid" class="news-grid" aria-live="polite"></div>
+  <!-- Contenido principal -->
+  <main id="contenido-principal" role="main" aria-live="polite">
+    <section class="news-grid" id="news-container" aria-label="Lista de noticias">
+      <!-- Las noticias se inyectan aquí vía JS -->
+      <p class="loading" id="loading-msg">Cargando noticias…</p>
+    </section>
+  </main>
 
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state" hidden>
-            <p>📭 No hay noticias disponibles en esta categoría</p>
-            <button id="refreshBtn" class="refresh-btn">🔄 Actualizar</button>
-        </div>
+  <!-- Footer con info de PWA -->
+  <footer role="contentinfo">
+    <p><small>News Minimal PWA · <button id="install-btn" hidden>📲 Instalar app</button></small></p>
+    <p><small>Offline: <span id="offline-status">🟢 Conectado</span></small></p>
+  </footer>
 
-        <!-- Error State -->
-        <div id="errorState" class="error-state" hidden>
-            <p>⚠️ Error al cargar noticias</p>
-            <button id="retryBtn" class="retry-btn">🔄 Reintentar</button>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer" role="contentinfo">
-        <p>Última actualización: <time id="lastUpdate"></time></p>
-        <p class="offline-indicator" id="offlineIndicator" hidden>📴 Modo offline activo</p>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="app.js" defer></script>
+  <!-- Scripts -->
+  <script src="/news-minimal-pwa/app.js" defer></script>
+  <script>
+    // Registro del Service Worker (condicional para GitHub Pages)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/news-minimal-pwa/sw.js')
+          .then(reg => console.log('SW registrado:', reg.scope))
+          .catch(err => console.log('SW falló:', err));
+      });
+    }
+  </script>
 </body>
 </html>
