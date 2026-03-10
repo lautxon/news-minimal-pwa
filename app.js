@@ -285,3 +285,12 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.offlineStatus.textContent = state.offline ? '🔴 Offline' : '🟢 Conectado';
   DOM.offlineStatus.style.color = state.offline ? '#ff6b6b' : '#00d1b2';
 });
+
+// Prevención de interceptación de links externos en GitHub Pages
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a[data-external="true"]');
+  if (link && link.hostname !== window.location.hostname) {
+    e.preventDefault();
+    window.open(link.href, '_blank', 'noopener,noreferrer');
+  }
+});
