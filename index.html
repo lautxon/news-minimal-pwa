@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lector de noticias minimalista - Política, Economía, Ciencia, Tecnología, Cultura y Cine">
+    <meta name="theme-color" content="#1a1a2e">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="News Minimal">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <title>📰 News Minimal</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <h1 class="logo">📰 News Minimal</h1>
+            <button id="installBtn" class="install-btn" aria-label="Instalar aplicación" hidden>
+                <span>📥</span> Instalar
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation - Categories -->
+    <nav class="nav-categories" role="navigation" aria-label="Categorías de noticias">
+        <button class="cat-btn active" data-category="all" aria-current="page">Todas</button>
+        <button class="cat-btn" data-category="politics">Política</button>
+        <button class="cat-btn" data-category="economy">Economía</button>
+        <button class="cat-btn" data-category="science">Ciencia</button>
+        <button class="cat-btn" data-category="technology">Tecnología</button>
+        <button class="cat-btn" data-category="culture">Cultura</button>
+        <button class="cat-btn" data-category="cinema">Cine</button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+        <!-- Loading State -->
+        <div id="loading" class="loading" aria-live="polite">
+            <div class="spinner"></div>
+            <p>Cargando noticias...</p>
+        </div>
+
+        <!-- News Grid -->
+        <div id="newsGrid" class="news-grid" aria-live="polite"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" hidden>
+            <p>📭 No hay noticias disponibles en esta categoría</p>
+            <button id="refreshBtn" class="refresh-btn">🔄 Actualizar</button>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" hidden>
+            <p>⚠️ Error al cargar noticias</p>
+            <button id="retryBtn" class="retry-btn">🔄 Reintentar</button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <p>Última actualización: <time id="lastUpdate"></time></p>
+        <p class="offline-indicator" id="offlineIndicator" hidden>📴 Modo offline activo</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="app.js" defer></script>
+</body>
+</html>
