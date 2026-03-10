@@ -1,21 +1,23 @@
 {
-  "name": "News Minimal - Lector de Noticias",
-  "short_name": "News Minimal",
-  "description": "Lector de noticias minimalista con fuentes nacionales e internacionales",
-  "start_url": "/index.html",
+  "name": "News Minimal",
+  "short_name": "NewsMin",
+  "description": "Lector minimalista de noticias internacionales y nacionales",
+  "start_url": "/news-minimal-pwa/",
+  "scope": "/news-minimal-pwa/",
   "display": "standalone",
-  "background_color": "#1a1a2e",
-  "theme_color": "#1a1a2e",
   "orientation": "portrait-primary",
+  "background_color": "#0f0f0f",
+  "theme_color": "#0f0f0f",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "/news-minimal-pwa/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "/news-minimal-pwa/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
