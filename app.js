@@ -149,7 +149,11 @@ function renderArticles() {
     <article class="news-card" itemscope itemtype="https://schema.org/NewsArticle">
       <p class="news-card__source">${formatSource(article.source)}</p>
       <h2 class="news-card__title">
-        <a href="${article.url}" target="_blank" rel="noopener noreferrer" itemprop="url">
+        <a href="${article.url}" 
+   target="_blank" 
+   rel="noopener noreferrer external"
+   onclick="event.stopPropagation()"
+   data-external="true">
           <span itemprop="headline">${escapeHtml(article.title)}</span>
         </a>
       </h2>
