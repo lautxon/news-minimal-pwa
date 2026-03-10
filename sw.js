@@ -1,72 +1,76 @@
+// sw.js - Service Worker para News Minimal PWA
+// Estrategia: Cache-first para assets, Network-first para noticias
+
 const CACHE_NAME = 'news-minimal-v1';
-const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+const STATIC_ASSETS = [
+  '/news-minimal-pwa/',
+  '/news-minimal-pwa/index.html',
+  '/news-minimal-pwa/styles.css',
+  '/news-minimal-pwa/app.js',
+  '/news-minimal-pwa/manifest.json',
+  // Fallback offline
+  '/news-minimal-pwa/offline.html'
 ];
 
-// Install Event - Cache assets
+// Instalación: precachear assets estáticos
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 Cacheando assets');
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Precacheando assets');
+        return cache.addAll(STATIC_ASSETS);
+      })
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-// Activate Event - Clean old caches
+// Activación: limpiar caches viejas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then((keys) => {
       return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+        keys.filter((key) => key !== CACHE_NAME)
+            .map((key) => caches.delete(key))
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Fetch Event - Network first, fallback to cache
+// Fetch: estrategia híbrida
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return;
+  const { request } = event;
+  const url = new URL(request.url);
 
-  // Skip cross-origin requests
-  if (!event.request.url.startsWith(self.location.origin)) return;
-
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Clone response for cache
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
-        return response;
-      })
-      .catch(() => {
-        // Fallback to cache
-        return caches.match(event.request);
-      })
-  );
-});
-
-// Background Sync for news updates (optional)
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'sync-news') {
-    event.waitUntil(fetchNews());
+  // Si es una petición a API de noticias (simulada o real)
+  if (url.pathname.includes('/api/news') || url.hostname.includes('workers.dev')) {
+    // Network-first para contenido fresco
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Clonar para cachear
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fallback a caché si está offline
+          return caches.match(request);
+        })
+    );
+  } else {
+    // Cache-first para assets estáticos
+    event.respondWith(
+      caches.match(request)
+        .then((cached) => cached || fetch(request))
+    );
   }
 });
 
-async function fetchNews() {
-  // Logic for background news sync
-  console.log('🔄 Sincronizando noticias en segundo plano');
-}
+// Mensajería para actualizar UI de estado offline
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
